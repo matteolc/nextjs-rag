@@ -23,6 +23,7 @@ import { themeColors } from "@/app/themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import Link from "next/link";
 import { UserContext } from "../user-context";
+import { signOutAction } from "@/app/actions";
 
 export function NavUser() {
   const avatar = "/avatars/04.png";
@@ -133,18 +134,18 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              {/* biome-ignore lint/complexity/noUselessFragments: <explanation> */}
-              <>
-                <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
-                  <LogOut className="size-4" />
-
-                  <form className="w-full">
-                    <button type="submit" className="w-full text-left">
-                      Log out
-                    </button>
-                  </form>
-                </div>
-              </>
+              <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
+                <LogOut className="size-4" />
+                <form className="w-full">
+                  <button
+                    type="submit"
+                    formAction={signOutAction}
+                    className="w-full text-left"
+                  >
+                    Log out
+                  </button>
+                </form>
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

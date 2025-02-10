@@ -1,3 +1,5 @@
+"use client";
+
 import { Check, ChevronsUpDown, Plus, Squirrel } from "lucide-react";
 
 import { workspaces } from "@/app/workspaces";
