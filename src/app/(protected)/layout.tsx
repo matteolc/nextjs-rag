@@ -4,6 +4,7 @@ import { WorkspaceProvider } from "@/components/workspace-context";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { workspaces } from "../workspaces";
 
 export default async function Layout({
   children,
@@ -31,7 +32,7 @@ export default async function Layout({
   }
 
   const cookieStore = await cookies();
-  const workspace = cookieStore.get("workspace")?.value || "default";
+  const workspace = cookieStore.get("workspace")?.value || workspaces[0].id;
 
   return (
     <UserProvider user={{ ...profile, email: user.email }}>

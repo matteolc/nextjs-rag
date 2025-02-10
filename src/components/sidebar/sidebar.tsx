@@ -9,21 +9,16 @@ import {
 import { Separator } from "@/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/ui/sidebar";
 import { AppSidebar } from "./app-sidebar";
-import { Fragment, useContext } from "react";
+import { Fragment } from "react";
 import { sentenceCase } from "@/lib/string";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { WorkspaceContext } from "../workspace-context";
+import { useWorkspace } from "../workspace-context";
 import { workspaces } from "@/app/workspaces";
 
 export const Sidebar = ({ children }: { children: React.ReactNode }) => {
-  const currentWorkspaceName = useContext(WorkspaceContext);
-  if (!currentWorkspaceName) {
-    return null;
-  }
-  const workspace = workspaces.find(
-    (workspace) => workspace.id === currentWorkspaceName,
-  );
+  const currentWorkspace = useWorkspace();
+  const workspace = workspaces.find((ws) => ws.id === currentWorkspace);
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter((segment) => segment !== "");
 
