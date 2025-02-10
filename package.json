@@ -17,7 +17,7 @@
     "db:link": "supabase link",
     "db:deploy": "supabase db push",
     "db:pull": "supabase db pull",
-    "db:generate:types": "supabase gen types --local --schema public > app/db.types.ts",
+    "db:generate:types": "supabase gen types --local --schema public > src/app/db.types.ts",
     "db:generate:migration": "supabase migration new",
     "db:generate:seeds": "supabase db dump --data-only -f supabase/seed.sql"
   },
@@ -48,6 +48,7 @@
     "lucide-react": "^0.474.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^9.0.3",
     "next": "15.1.6",
     "next-themes": "^0.4.4",
     "tailwind-merge": "^3.0.1",

@@ -1,78 +1,87 @@
 "use client";
 
-import { Button } from "@/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "@/ui/dropdown-menu";
+import { SidebarMenuItem } from "@/ui/sidebar";
+import { SidebarMenuButton } from "@/ui/sidebar";
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+export const SidebarThemeSwitcher = () => {
+	const [mounted, setMounted] = useState(false);
+	const { theme, setTheme } = useTheme();
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	if (!mounted) {
+		return null;
+	}
+
+	const THEME_ICON = {
+		light: <Sun size={16} />,
+		dark: <Moon size={16} />,
+		system: <Laptop size={16} />,
+	};
+
+	if (!theme) {
+		return null;
+	}
+
+	return (
+		<SidebarMenuItem key={theme}>
+			<SidebarMenuButton asChild size="sm">
+				<button
+					type="button"
+					onClick={() => {
+						setTheme(theme === "light" ? "dark" : "light");
+					}}
+				>
+					{THEME_ICON[theme as keyof typeof THEME_ICON]}
+					{theme.charAt(0).toUpperCase() + theme?.slice(1)}
+				</button>
+			</SidebarMenuButton>
+		</SidebarMenuItem>
+	);
+};
+
 const ThemeSwitcher = () => {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
+	const { theme, setTheme } = useTheme();
 
-  // useEffect only runs on the client, so now we can safely show the UI
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
-  if (!mounted) {
-    return null;
-  }
+	if (!mounted) {
+		return null;
+	}
 
-  const ICON_SIZE = 16;
+	const themes = ["light", "dark", "system"];
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size={"sm"}>
-          {theme === "light" ? (
-            <Sun
-              key="light"
-              size={ICON_SIZE}
-              className={"text-muted-foreground"}
-            />
-          ) : theme === "dark" ? (
-            <Moon
-              key="dark"
-              size={ICON_SIZE}
-              className={"text-muted-foreground"}
-            />
-          ) : (
-            <Laptop
-              key="system"
-              size={ICON_SIZE}
-              className={"text-muted-foreground"}
-            />
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-content" align="start">
-        <DropdownMenuRadioGroup
-          value={theme}
-          onValueChange={(e) => setTheme(e)}
-        >
-          <DropdownMenuRadioItem className="flex gap-2" value="light">
-            <Sun size={ICON_SIZE} className="text-muted-foreground" />{" "}
-            <span>Light</span>
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem className="flex gap-2" value="dark">
-            <Moon size={ICON_SIZE} className="text-muted-foreground" />{" "}
-            <span>Dark</span>
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem className="flex gap-2" value="system">
-            <Laptop size={ICON_SIZE} className="text-muted-foreground" />{" "}
-            <span>System</span>
-          </DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+	return (
+		<div className="flex gap-1">
+			{themes.map((t) => (
+				<button
+					type="button"
+					key={t}
+					className="rounded-full hover:bg-muted"
+					onClick={() => setTheme(t)}
+				>
+					{t === "light" ? (
+						<Sun size={16} className="text-muted-foreground" />
+					) : t === "dark" ? (
+						<Moon size={16} className="text-muted-foreground" />
+					) : (
+						<Laptop size={16} className="text-muted-foreground" />
+					)}
+					<span className="sr-only">
+						{t.charAt(0).toUpperCase() + t.slice(1)}
+					</span>
+				</button>
+			))}
+		</div>
+	);
 };
 
 export { ThemeSwitcher };

@@ -1,44 +1,84 @@
 import { signInAction } from "@/app/actions";
 import { FormMessage, type Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
+import { FormFooter } from "@/ui/form";
+import { FormControl } from "@/ui/form";
+import { FormField } from "@/ui/form";
+import { FormLabel } from "@/ui/form";
+import { cn } from "@/lib/cn";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/ui/card";
+import { FormFieldset } from "@/ui/form";
 import { Input } from "@/ui/input";
-import { Label } from "@/ui/label";
 import Link from "next/link";
 
 export default async function Login(props: { searchParams: Promise<Message> }) {
   const searchParams = await props.searchParams;
   return (
-    <form className="flex-1 flex flex-col min-w-64">
-      <h1 className="text-2xl font-medium">Sign in</h1>
-      <p className="text-sm text-foreground">
-        Don't have an account?{" "}
-        <Link className="text-foreground font-medium underline" href="/sign-up">
-          Sign up
-        </Link>
-      </p>
-      <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
-        <Label htmlFor="email">Email</Label>
-        <Input name="email" placeholder="you@example.com" required />
-        <div className="flex justify-between items-center">
-          <Label htmlFor="password">Password</Label>
-          <Link
-            className="text-xs text-foreground underline"
-            href="/forgot-password"
-          >
-            Forgot Password?
-          </Link>
-        </div>
-        <Input
-          type="password"
-          name="password"
-          placeholder="Your password"
-          required
-        />
-        <SubmitButton pendingText="Signing In..." formAction={signInAction}>
-          Sign in
-        </SubmitButton>
-        <FormMessage message={searchParams} />
-      </div>
-    </form>
+    <div className={cn("flex flex-col gap-6")}>
+      <Card className="border-border min-h-[410px]">
+        <CardHeader>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Sign in to your account.{" "}
+            <Link
+              href="/forgot-password"
+              className="hover:underline underline-offset-4"
+            >
+              Forgot your password?
+            </Link>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form>
+            <FormFieldset>
+              <FormField name="email" isRequired>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    formNoValidate
+                  />
+                </FormControl>
+              </FormField>
+              <FormField name="password" isRequired>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    name="password"
+                    type="password"
+                    autoComplete="password"
+                    formNoValidate
+                  />
+                </FormControl>
+              </FormField>
+              <FormMessage message={searchParams} />
+            </FormFieldset>
+            <FormFooter>
+              <SubmitButton
+                pendingText="Signing In..."
+                formAction={signInAction}
+                className="w-full justify-center"
+              >
+                Login
+              </SubmitButton>
+            </FormFooter>
+            <div className="mt-4 text-center text-sm">
+              Don&apos;t have an account?{" "}
+              <Link href="/sign-up" className="underline underline-offset-4">
+                Sign up
+              </Link>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

@@ -2,9 +2,19 @@ import { signUpAction } from "@/app/actions";
 import { FormMessage, type Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/ui/input";
-import { Label } from "@/ui/label";
 import Link from "next/link";
-import { SmtpMessage } from "../smtp-message";
+import { FormControl, FormLabel } from "@/ui/form";
+import { FormField } from "@/ui/form";
+import { FormFieldset } from "@/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/ui/card";
+import { FormFooter } from "@/ui/form";
+import { cn } from "@/lib/cn";
 
 export default async function Signup(props: {
   searchParams: Promise<Message>;
@@ -20,32 +30,61 @@ export default async function Signup(props: {
 
   return (
     <>
-      <form className="flex flex-col min-w-64 max-w-64 mx-auto">
-        <h1 className="text-2xl font-medium">Sign up</h1>
-        <p className="text-sm text text-foreground">
-          Already have an account?{" "}
-          <Link className="text-primary font-medium underline" href="/sign-in">
-            Sign in
-          </Link>
-        </p>
-        <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
-          <Label htmlFor="email">Email</Label>
-          <Input name="email" placeholder="you@example.com" required />
-          <Label htmlFor="password">Password</Label>
-          <Input
-            type="password"
-            name="password"
-            placeholder="Your password"
-            minLength={6}
-            required
-          />
-          <SubmitButton formAction={signUpAction} pendingText="Signing up...">
-            Sign up
-          </SubmitButton>
-          <FormMessage message={searchParams} />
-        </div>
-      </form>
-      <SmtpMessage />
+      <div className={cn("flex flex-col gap-6")}>
+        <Card className="border-border min-h-[410px]">
+          <CardHeader>
+            <CardTitle className="text-2xl">Sign Up</CardTitle>
+            <CardDescription>
+              Create a new account.{" "}
+              <Link
+                href="/sign-in"
+                className="hover:underline underline-offset-4"
+              >
+                Already have an account? Sign in instead.
+              </Link>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <FormFieldset>
+                <FormField name="email" isRequired>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      formNoValidate
+                    />
+                  </FormControl>
+                </FormField>
+
+                <FormField name="password" isRequired>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      name="password"
+                      type="password"
+                      autoComplete="new-password"
+                    />
+                  </FormControl>
+                </FormField>
+              </FormFieldset>
+              <FormMessage message={searchParams} />
+
+              <FormFooter>
+                <SubmitButton
+                  className="w-full justify-center"
+                  formAction={signUpAction}
+                  pendingText="Signing up..."
+                >
+                  Create Account
+                </SubmitButton>
+              </FormFooter>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }
