@@ -6,17 +6,17 @@ const defaultLocale = "en";
 export const LocaleContext = createContext<string>("en");
 
 export const LocaleProvider = ({
-	children,
-	locale,
+  children,
+  locale,
 }: { children: React.ReactNode; locale: string | undefined }) => {
-	return (
-		<LocaleContext.Provider value={locale || defaultLocale}>
-			{children}
-		</LocaleContext.Provider>
-	);
+  return (
+    <LocaleContext.Provider value={locale || defaultLocale}>
+      {children}
+    </LocaleContext.Provider>
+  );
 };
 
 export const useLocale = () => {
-	const locale = useContext(LocaleContext);
-	return locale;
+  const locale = useContext(LocaleContext);
+  return locale;
 };

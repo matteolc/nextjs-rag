@@ -4,16 +4,16 @@ import { themes } from "../const/themes";
 import { useTheme } from "next-themes";
 
 export function ClientSideProviders({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	const { theme } = useTheme();
-	return (
-		<div key={theme}>
-			<PaletteProvider lightOrDark={theme} themes={themes}>
-				{children}
-			</PaletteProvider>
-		</div>
-	);
+  const { theme } = useTheme();
+  return (
+    <div key={theme}>
+      <PaletteProvider lightOrDark={theme} themes={themes}>
+        {children}
+      </PaletteProvider>
+    </div>
+  );
 }
