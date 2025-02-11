@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
 } from "@/ui/dialog";
 
 import { Button } from "@/ui/button";
@@ -17,55 +17,92 @@ import { PlusIcon } from "lucide-react";
 import { DragAndDropZone } from "@/components/uploads/DragAndDropZone";
 import { UploadsTable } from "@/components/uploads/data-table";
 import { columns } from "@/components/uploads/columns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Tables } from "@/app/db.types";
+import { useWorkspace } from "@/hooks/workspace-context";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
-export function UploadsPage() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [namespace, setNamespace] = useState("");
-  const [data, setData] = useState<Tables<"uploads">[]>([]);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+export function UploadsPage({
+	data,
+	total,
+	page,
+	perPage,
+	profileId,
+}: {
+	data: Tables<"uploads">[];
+	total: number;
+	page: number;
+	perPage: number;
+	profileId: string | undefined;
+}) {
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const namespace = useWorkspace();
 
-  return (
-    <>
-      <HeadingWrapper>
-        <Heading>Uploads</Heading>
-        <div className="flex items-center space-x-2">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm">
-                <PlusIcon className="h-4 w-4" />
-                Upload Files
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="border-border">
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-bold">
-                  Upload Files
-                </DialogTitle>
-                <DialogDescription>
-                  Upload files to the current workspace
-                </DialogDescription>
-              </DialogHeader>
-              <DragAndDropZone
-                namespace={namespace}
-                onUploadComplete={() => {
-                  setIsDialogOpen(false);
-                }}
-              />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </HeadingWrapper>
-      <UploadsTable
-        columns={columns}
-        data={data}
-        totalRows={total}
-        page={page}
-        perPage={perPage}
-      />
-    </>
-  );
+	const supabase = createClient();
+	const router = useRouter();
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		const channel = supabase
+			.channel("custom-insert-channel")
+			.on(
+				"postgres_changes",
+				{
+					event: "INSERT",
+					schema: "public",
+					table: "uploads",
+					filter: `profile_id=eq.${profileId}`,
+				},
+				(payload) => {
+					router.push("/uploads");
+				},
+			)
+			.subscribe();
+
+		return () => {
+			channel.unsubscribe();
+		};
+	}, [profileId]);
+
+	return (
+		<>
+			<HeadingWrapper>
+				<Heading>Uploads</Heading>
+				<div className="flex items-center space-x-2">
+					<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+						<DialogTrigger asChild>
+							<Button size="sm">
+								<PlusIcon className="h-4 w-4" />
+								Upload Files
+							</Button>
+						</DialogTrigger>
+						<DialogContent className="border-border">
+							<DialogHeader>
+								<DialogTitle className="text-2xl font-bold">
+									Upload Files
+								</DialogTitle>
+								<DialogDescription>
+									Upload files to the current workspace
+								</DialogDescription>
+							</DialogHeader>
+							<DragAndDropZone
+								namespace={namespace}
+								onUploadComplete={() => {
+									setIsDialogOpen(false);
+								}}
+							/>
+						</DialogContent>
+					</Dialog>
+				</div>
+			</HeadingWrapper>
+			<UploadsTable
+				columns={columns}
+				data={data}
+				totalRows={total}
+				page={page}
+				perPage={perPage}
+			/>
+		</>
+	);
 }
