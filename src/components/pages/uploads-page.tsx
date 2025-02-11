@@ -20,7 +20,7 @@ import { columns } from "@/components/uploads/columns";
 import { useState } from "react";
 import type { Tables } from "@/app/db.types";
 
-export function UploadsPageWrapper() {
+export function UploadsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [namespace, setNamespace] = useState("");
   const [data, setData] = useState<Tables<"uploads">[]>([]);

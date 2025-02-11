@@ -1,5 +1,3 @@
-import PalettePageWrapper from "@/components/palette-page-wrapper";
+import PalettePage from "@/components/pages/palette-page";
 
-export default function Screen() {
-  return <PalettePageWrapper />;
-}
+export default PalettePage;

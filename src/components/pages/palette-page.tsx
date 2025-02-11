@@ -3,7 +3,7 @@
 import { ThemePalette, ThemeUtilitiesDisplay } from "@palettebro/theme-toolbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
 
-export default function PalettePageWrapper({
+export default function PalettePage({
   children,
 }: { children?: React.ReactNode }) {
   return (

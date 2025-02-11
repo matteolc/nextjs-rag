@@ -18,9 +18,9 @@ import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/ui/button";
 import { TokenUsage } from "./token-usage";
 import Contenteditable from "./content-editable";
-import { UserContext } from "../user-context";
+import { UserContext } from "../../hooks/user-context";
 import type { Tables } from "@/app/db.types";
-import { WorkspaceContext } from "../workspace-context";
+import { WorkspaceContext } from "../../hooks/workspace-context";
 
 export function ChatPageWrapper({
   tokenUsage,
