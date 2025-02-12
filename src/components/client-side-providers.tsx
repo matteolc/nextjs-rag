@@ -1,6 +1,6 @@
 "use client";
 import { PaletteProvider } from "@palettebro/theme-toolbar";
-import { themes } from "../app/themes";
+import { themes } from "../const/themes";
 import { useTheme } from "next-themes";
 
 export function ClientSideProviders({
@@ -10,8 +10,10 @@ export function ClientSideProviders({
 }) {
   const { theme } = useTheme();
   return (
-    <PaletteProvider lightOrDark={theme} themes={themes}>
-      {children}
-    </PaletteProvider>
+    <div key={theme}>
+      <PaletteProvider lightOrDark={theme} themes={themes}>
+        {children}
+      </PaletteProvider>
+    </div>
   );
 }

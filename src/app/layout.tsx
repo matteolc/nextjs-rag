@@ -1,6 +1,7 @@
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import "./typography.css";
 import { ClientSideProviders } from "@/components/client-side-providers";
 
 const defaultUrl = process.env.VERCEL_URL

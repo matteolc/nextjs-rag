@@ -2,15 +2,14 @@
 
 import { FormFooter } from "@/ui/form";
 import { Heading, Paragraph, Subheading } from "@/ui/heading";
-
 import { HeadingWrapper } from "@/ui/heading";
 import { Input } from "@/ui/input";
-import { SubmitButton } from "./submit-button";
+import { SubmitButton } from "@/components/submit-button";
 import { useContext } from "react";
-import { UserContext } from "./user-context";
-import { action } from "@/app/(protected)/account/actions";
+import { UserContext } from "@/hooks/user-context";
+import { updateProfileAction } from "@/actions/account-actions";
 
-export function AccountPageWrapper() {
+export function AccountPage() {
   const profile = useContext(UserContext);
 
   if (!profile) {
@@ -72,7 +71,7 @@ export function AccountPageWrapper() {
         </div>
 
         <FormFooter className="justify-start">
-          <SubmitButton formAction={action}>Save</SubmitButton>
+          <SubmitButton formAction={updateProfileAction}>Save</SubmitButton>
         </FormFooter>
       </form>
     </>

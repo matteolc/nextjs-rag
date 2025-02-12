@@ -19,11 +19,11 @@ import {
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/ui/sidebar";
-import { themeColors } from "@/app/themes";
+import { themeColors } from "@/const/themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import Link from "next/link";
-import { UserContext } from "../user-context";
-import { signOutAction } from "@/app/actions";
+import { UserContext } from "../../hooks/user-context";
+import { signOutAction } from "@/actions/account-actions";
 
 export function NavUser() {
   const avatar = "/avatars/04.png";

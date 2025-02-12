@@ -13,8 +13,8 @@ import { Fragment } from "react";
 import { sentenceCase } from "@/lib/string";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useWorkspace } from "../workspace-context";
-import { workspaces } from "@/app/workspaces";
+import { useWorkspace } from "../../hooks/workspace-context";
+import { workspaces } from "@/const/workspaces";
 
 export const Sidebar = ({ children }: { children: React.ReactNode }) => {
   const currentWorkspace = useWorkspace();

@@ -2,7 +2,7 @@
 
 import { Check, ChevronsUpDown, Plus, Squirrel } from "lucide-react";
 
-import { workspaces } from "@/app/workspaces";
+import { workspaces } from "@/const/workspaces";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/ui/sidebar";
-import { switchWorkspaceAction } from "@/app/actions.switch-workspace";
-import { useWorkspace } from "./workspace-context";
+import { switchWorkspaceAction } from "@/actions/workspace-actions";
+import { useWorkspace } from "../hooks/workspace-context";
 
 export function WorkspaceSwitcher() {
   const currentWorkspace = useWorkspace();

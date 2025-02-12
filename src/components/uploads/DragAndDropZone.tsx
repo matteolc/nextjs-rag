@@ -30,7 +30,7 @@ export const DragAndDropZone = ({
         const promises = filesArray.map(async (file) => {
           await upload(file.name, file, {
             access: "public",
-            handleUploadUrl: `/api/upload/pdf?namespace=${namespace}`,
+            handleUploadUrl: `/upload?namespace=${namespace}`,
             clientPayload: JSON.stringify({ namespace, keepInCloud }),
             onUploadProgress: (progress) => {
               setUploadProgress(Math.round(progress.percentage));

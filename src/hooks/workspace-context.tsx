@@ -1,6 +1,6 @@
 "use client";
 
-import type { Workspace } from "@/app/workspaces";
+import type { Workspace } from "@/const/workspaces";
 import { createContext, useContext } from "react";
 
 export const WorkspaceContext = createContext<Workspace | null>(null);

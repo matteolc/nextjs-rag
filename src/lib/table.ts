@@ -11,10 +11,7 @@ export interface TableParams {
 
 export const DEFAULT_PER_PAGE = 10;
 
-export async function getTableParams(request: NextRequest) {
-  const url = new URL(request.url);
-  const searchParams = url.searchParams;
-
+export async function getTableParams(searchParams: URLSearchParams) {
   const page = Number(searchParams.get("page") || "1");
   const perPage = Number(searchParams.get("perPage") || DEFAULT_PER_PAGE);
   const sortParam = searchParams.get("sort")?.split(".");

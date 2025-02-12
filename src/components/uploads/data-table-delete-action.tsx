@@ -21,7 +21,7 @@ import {
 import type { Tables } from "@/app/db.types";
 import type { Table as ReactTable } from "@tanstack/react-table";
 import { useContext, useState } from "react";
-import { WorkspaceContext } from "../workspace-context";
+import { WorkspaceContext } from "../../hooks/workspace-context";
 
 export function DataTableDeleteAction({
   table,

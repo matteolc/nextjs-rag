@@ -1,48 +1,27 @@
-import { LayoutWrapper } from "@/components/layout-wrapper";
-import { UserProvider } from "@/components/user-context";
-import { WorkspaceProvider } from "@/components/workspace-context";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { workspaces } from "../workspaces";
+import { SidebarLayout } from "@/components/pages/sidebar-layout";
+import { UserProvider } from "@/hooks/user-context";
+import { WorkspaceProvider } from "@/hooks/workspace-context";
+import { LocaleProvider } from "@/hooks/locale-context";
+import { loader } from "@/loaders/protected-loader";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("id, first_name, last_name")
-    .eq("id", user.id)
-    .single();
-
-  if (!profile) {
-    return redirect("/sign-in");
-  }
-
-  const cookieStore = await cookies();
-  const workspace = cookieStore.get("workspace")?.value || workspaces[0].id;
+  const { locale, profile, workspace } = await loader();
 
   return (
-    <UserProvider user={{ ...profile, email: user.email }}>
-      <WorkspaceProvider workspace={workspace}>
-        <LayoutWrapper>
-          <div className="h-full flex-1 flex-col space-y-8 pt-8 px-8">
-            {children}
-          </div>
-        </LayoutWrapper>
-      </WorkspaceProvider>
-    </UserProvider>
+    <LocaleProvider locale={locale}>
+      <UserProvider user={{ ...profile, email: profile.email }}>
+        <WorkspaceProvider workspace={workspace}>
+          <SidebarLayout>
+            <div className="h-full flex-1 flex-col space-y-8 pt-8 px-8">
+              {children}
+            </div>
+          </SidebarLayout>
+        </WorkspaceProvider>
+      </UserProvider>
+    </LocaleProvider>
   );
 }

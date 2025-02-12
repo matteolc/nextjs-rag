@@ -1,5 +1,3 @@
-import { AccountPageWrapper } from "@/components/account-page-wrapper";
+import { AccountPage } from "@/components/pages/account-page";
 
-export default function Screen() {
-  return <AccountPageWrapper />;
-}
+export default AccountPage;
