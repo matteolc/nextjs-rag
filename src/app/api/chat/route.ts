@@ -1,7 +1,9 @@
 import { VectorStore } from "@/services/vector-store";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse, type NextRequest } from "next/server";
-import { chat } from "@/services/chat";
+import { chatWithStreaming } from "@/services/chat";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -17,18 +19,40 @@ export async function POST(request: NextRequest) {
   const vectorStore = new VectorStore({ supabase });
 
   try {
-    const { answer, context } = await chat({
+    const stream = await chatWithStreaming({
       question,
       history,
       vectorStore,
       filter: { profile_id: profileId, namespace: workspace },
     });
 
-    return NextResponse.json({
-      answer,
-      question,
-      context,
-      success: true,
+    // Convert the stream to a proper format
+    const responseStream = new ReadableStream({
+      async start(controller) {
+        const reader = stream.getReader();
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              break;
+            }
+            value.answer && controller.enqueue(value.answer);
+          }
+        } catch (error) {
+          controller.error(error);
+        } finally {
+          reader.releaseLock();
+          controller.close();
+        }
+      },
+    });
+
+    return new NextResponse(responseStream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache, no-transform",
+        Connection: "keep-alive",
+      },
     });
   } catch (error) {
     console.error(error);

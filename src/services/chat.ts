@@ -21,6 +21,7 @@ export const chat = async ({
     prompt: chatPrompt,
     filter,
   });
+
   const { answer, context } = (await chain.invoke({
     chat_history: history.flatMap(([human, ai]: [string, string]) => [
       new HumanMessage(human),
@@ -33,4 +34,32 @@ export const chat = async ({
   };
 
   return { answer, question, context };
+};
+
+export const chatWithStreaming = async ({
+  question,
+  history,
+  vectorStore,
+  filter,
+}: {
+  question: string;
+  history: [string, string][];
+  vectorStore: VectorStore;
+  filter: {
+    profile_id: string;
+    namespace: string;
+  };
+}) => {
+  const chain = await vectorStore.createVectorStoreRetrivalChain({
+    prompt: chatPrompt,
+    filter,
+  });
+
+  return await chain.stream({
+    input: question.trim().replaceAll("\n", " "),
+    chat_history: history.flatMap(([human, ai]: [string, string]) => [
+      new HumanMessage(human),
+      new AIMessage(ai),
+    ]),
+  });
 };
