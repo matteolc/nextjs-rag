@@ -20,7 +20,8 @@ import { TokenUsage } from "./token-usage";
 import Contenteditable from "./content-editable";
 import { UserContext } from "../../hooks/user-context";
 import type { Tables } from "@/app/db.types";
-import { WorkspaceContext } from "../../hooks/workspace-context";
+import { useWorkspace } from "../../hooks/workspace-context";
+import { chatAction } from "@/actions/chat-actions";
 
 export function ChatPageWrapper({
   tokenUsage,
@@ -35,7 +36,7 @@ export function ChatPageWrapper({
     completionTokens: tokenUsage?.total_completion_tokens,
     model: tokenUsage?.model,
   });
-  const workspace = useContext(WorkspaceContext);
+  const workspace = useWorkspace();
   const [query, setQuery] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -55,14 +56,12 @@ export function ChatPageWrapper({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const handleSubmit = useCallback(
-    (e: React.FormEvent | React.KeyboardEvent<HTMLTextAreaElement>) => {
+    (
+      e:
+        | React.KeyboardEvent<HTMLTextAreaElement | HTMLDivElement>
+        | React.MouseEvent<HTMLButtonElement>,
+    ) => {
       e.preventDefault();
-
-      if (!query) {
-        alert("Please input a question");
-        return;
-      }
-
       const question = query.trim();
 
       setMessageState((state) => ({
@@ -79,18 +78,14 @@ export function ChatPageWrapper({
 
       setQuery("");
       setMessageState((state) => ({ ...state, pending: "" }));
-      // submit(
-      // 	{
-      // 		question,
-      // 		history: JSON.stringify(history),
-      // 	},
-      // 	{
-      // 		method: "POST",
-      // 		action: "/api/chat",
-      // 		navigate: false,
-      // 		fetcherKey: "chat-fetcher",
-      // 	},
-      // );
+      const form = new FormData();
+      form.set("question", question);
+      form.set("history", JSON.stringify(history));
+      form.set("workspace", workspace);
+      form.set("profile_id", profile.id);
+      form.set("service", "chat");
+
+      chatAction(form);
     },
     [query, history],
   );
