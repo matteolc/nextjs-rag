@@ -1,8 +1,7 @@
 import type { Tables } from "@/app/db.types";
-import { workspaces } from "@/const/workspaces";
 import { getTableParams } from "@/lib/table";
+import { getWorkspace } from "@/lib/workspace";
 import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 
 export const loader = async (searchParams: URLSearchParams) => {
   const supabase = await createClient();
@@ -38,8 +37,7 @@ export const loader = async (searchParams: URLSearchParams) => {
 
   const { page, perPage, sort, order, filters } =
     await getTableParams(searchParams);
-  const cookieStore = await cookies();
-  const workspace = cookieStore.get("workspace")?.value || workspaces[0].id;
+  const workspace = await getWorkspace();
 
   if (!workspace) {
     return {

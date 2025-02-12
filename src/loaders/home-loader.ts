@@ -1,6 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { workspaces } from "@/const/workspaces";
-import { cookies } from "next/headers";
+import { getWorkspace } from "@/lib/workspace";
 
 export const loader = async () => {
   const supabase = await createClient();
@@ -26,8 +25,7 @@ export const loader = async () => {
     };
   }
 
-  const cookieStore = await cookies();
-  const workspace = cookieStore.get("workspace")?.value || workspaces[0].id;
+  const workspace = await getWorkspace();
 
   const { data: tokenUsage } = await supabase
     .from("token_aggregation")

@@ -1,9 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
-import { workspaces } from "@/const/workspaces";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Negotiator from "negotiator";
 import { match } from "@formatjs/intl-localematcher";
+import { getWorkspace } from "@/lib/workspace";
 
 export const loader = async () => {
   const supabase = await createClient();
@@ -26,8 +25,7 @@ export const loader = async () => {
     return redirect("/sign-in");
   }
 
-  const cookieStore = await cookies();
-  const workspace = cookieStore.get("workspace")?.value || workspaces[0].id;
+  const workspace = await getWorkspace();
 
   const headers = { "accept-language": "en-US,en;q=0.5" };
   const languages = new Negotiator({ headers }).languages();
